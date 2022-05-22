@@ -1,52 +1,40 @@
-#ifndef HOLBERTON_H
-#define HOLBERTON_H
+#ifndef _MAIN_H_
+#define _MAIN_H_
+#define INT_BITS (4 * 8)
 
-#include <stdlib.h>
 #include <stdarg.h>
-/**
- * struct flags - struct containing flags to "turn on"
- * when a flag specifier is passed to _printf()
- * @plus: flag for the '+' character
- * @space: flag for the ' ' character
- * @hash: flag for the '#' character
- */
-typedef struct flags
-{
-	int plus;
-	int space;
-	int hash;
-} flags_t;
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <limits.h>
 
 /**
- * struct printHandler - struct to choose the right function depending
- * on the format specifier passed to _printf()
- * @c: format specifier
- * @f: pointer to the correct printing function
+ * struct call - struct call
+ * @t: t - flag for data type
+ * @f: function - associated function
+ *
  */
-typedef struct printHandler
+typedef struct call
 {
-	char c;
-	int (*f)(va_list ap, flags_t *f);
-} ph;
-int print_int(va_list 1, flags_t *f);
-void print_number(int n);
-int print_unsigned(va_list 1, flags_t *f);
-int count_digit(int i);
-int print_hex(va_list 1, flags_t *f);
-int print_hex_big(va_list 1, flags_t *f);
-int print_binary(va_list 1, flags_t *f);
-int print_octal(va_list 1, flags_t *f);
-char *convert(unsigned long int num, int base, int lowercase);
+	char t;
+	int (*f)(char *, va_list, int);
+} call_t;
+
 int _printf(const char *format, ...);
-int (*get_print(char s))(va_list, flags_t *);
-int get_flag(char s, flags_t *f);
-int print_string(va_list 1, flags_t *f);
-int print_char(va_list 1, flags_t *f);
-int _putchar(char c);
-int _puts(char *str);
-int print_rot13(va_list 1, flags_t *f);
-int print_rev(va_list 1, flags_t *f);
-int print_bigS(va_list 1, flags_t *f)
-int print_address(va_list 1, flags_t *f);
-int print_percent(va_list 1, flags_t *f);
+int buff_append(char *buff_dest, va_list arg, int buff_count, char type);
+int print_buff(char *buff, unsigned int nbuff);
+int str_len(char *s);
+char *_strcpy(char *dest, char *src);
+int parse_char(char *buff_dest, va_list arg, int buff_count);
+int parse_str(char *buff_dest, va_list arg, int buff_count);
+int parse_int(char *buff_dest, va_list list, int buff_count);
+int parse_perc(char *buff_dest, va_list arg, int buff_count);
+int parse_bin(char *buff_dest, va_list arg, int buff_count);
+int parse_oct(char *buff_dest, va_list arg, int buff_count);
+int parse_hex(char *buff_dest, va_list arg, int buff_count);
+int parse_X(char *buff_dest, va_list arg, int buff_count);
+int parse_uint(char *buff_dest, va_list arg, int buff_count);
+int parse_rev(char *buff_dest, va_list arg, int buff_count);
+int parse_R13(char *buff_dest, va_list arg, int buff_count);
+
 #endif
