@@ -1,40 +1,26 @@
-#ifndef _MAIN_H_
-#define _MAIN_H_
-#define INT_BITS (4 * 8)
+#ifndef _MAIN_H
+#define _MAIN_H
 
 #include <stdarg.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <limits.h>
 
-/**
- * struct call - struct call
- * @t: t - flag for data type
- * @f: function - associated function
- *
- */
-typedef struct call
-{
-	char t;
-	int (*f)(char *, va_list, int);
-} call_t;
-
+int _putchar(char c);
+void _puts(char *str);
+void print_number(va_list ap, int base, int sign, int caps);
+int _strlen(char *s);
 int _printf(const char *format, ...);
-int buff_append(char *buff_dest, va_list arg, int buff_count, char type);
-int print_buff(char *buff, unsigned int nbuff);
-int str_len(char *s);
-char *_strcpy(char *dest, char *src);
-int parse_char(char *buff_dest, va_list arg, int buff_count);
-int parse_str(char *buff_dest, va_list arg, int buff_count);
-int parse_int(char *buff_dest, va_list list, int buff_count);
-int parse_perc(char *buff_dest, va_list arg, int buff_count);
-int parse_bin(char *buff_dest, va_list arg, int buff_count);
-int parse_oct(char *buff_dest, va_list arg, int buff_count);
-int parse_hex(char *buff_dest, va_list arg, int buff_count);
-int parse_X(char *buff_dest, va_list arg, int buff_count);
-int parse_uint(char *buff_dest, va_list arg, int buff_count);
-int parse_rev(char *buff_dest, va_list arg, int buff_count);
-int parse_R13(char *buff_dest, va_list arg, int buff_count);
+char *convert(char hexa_dec[], unsigned int num, int base);
+int function_manager(char c, va_list arg);
+int _switch(char c, va_list arg);
+int print_character(va_list arg);
+int print_sign(va_list arg, int base);
+int print_unsign(va_list arg, int base);
+int print_string(va_list arg);
+int print_ptr(va_list arg);
+int print_rot13(va_list arg);
+int print_rev(va_list arg);
+int print_base16_upper_lower(va_list arg, char *representation);
+int loop_format(va_list arg, const char *string);
+int call_function_manager(char aux, va_list arg);
+int check_percent(int *flag, char aux);
 
 #endif

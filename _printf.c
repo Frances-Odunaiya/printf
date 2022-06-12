@@ -1,51 +1,113 @@
 #include "main.h"
 
 /**
- * _printf - formatted output conversion and print data.
- * @format: input string.
- *
- * Return: number of chard printed.
+ * _printf - printf
+ * @format: const char pointer
+ * Description: this functions implement some functions of printf
+ * Return: number of characters printed.
  */
 
 int _printf(const char *format, ...)
 {
-	int i = 0, j = 0, buff_count = 0, prev_buff_count = 0;
-	char buffer[2000];
+	const char *string;
+	int cont = 0;
 	va_list arg;
-	call_t container[] = {
-		{'c', parse_char}, {'s', parse_str}, {'i', parse_int}, {'d', parse_int},
-		{'%', parse_perc}, {'b', parse_bin}, {'o', parse_out}, {'x', parse_hex},
-		{'X', parse_X}, {'u', parse_uint}, {'R', parse_R13}, {'r', parse_rev},
-		{'\0', NULL}
-	};
 
 	if (!format)
 		return (-1);
+
 	va_start(arg, format);
-	while (format && format[i] != '\0')
+	string = format;
+
+	cont = loop_format(arg, string);
+
+	va_end(arg);
+	return (cont);
+}
+/**
+ * loop_format - loop format
+ * @arg: va_list arg
+ * @string: pointer from format
+ * Description: This function make loop to string pointer
+ * Return: num of characters printed
+ */
+int loop_format(va_list arg, const char *string)
+{
+	int i = 0, flag = 0, cont_fm = 0, cont = 0, check_per = 0;
+
+	while (i < _strlen((char *)string) && *string != '\0')
 	{
-		if (format[i] == '%')
+		char aux = string[i];
+
+		if (aux == '%')
 		{
-			i++, prev_buff_count = buff_count;
-			for (j = 0; container[j].t != '\0'; j++)
+			i++, flag++;
+			aux = string[i];
+			if (aux == '\0' && _strlen((char *)string) == 1)
+				return (-1);
+			if (aux == '\0')
+				return (cont);
+			if (aux == '%')
 			{
-				if (format[i] == '\0')
-					break;
-				if (format[i] == container[j].t)
+				flag++;
+			} else
+			{
+				cont_fm = function_manager(aux, arg);
+				if (cont_fm >= 0 && cont_fm != -1)
 				{
-					buff_count = container[j].f(buffer, arg, buff_count);
-					break;
+					i++;
+					aux = string[i];
+					if (aux == '%')
+						flag--;
+					cont = cont + cont_fm;
+				} else if (cont_fm == -1 && aux != '\n')
+				{
+					cont += _putchar('%');
 				}
 			}
-			if (buff_count == prev_buff_count && format[i])
-				i--, buffer[buff_count] = format[i], buff_count++;
 		}
-		else
-			buffer[buff_count] = format[i], buff_count++;
-		i++;
+		check_per = check_percent(&flag, aux);
+		cont += check_per;
+		if (check_per == 0 && aux != '\0' && aux != '%')
+			cont += _putchar(aux), i++;
+		check_per = 0;
 	}
-	va_end(arg);
-	buffer[buff_count] = '\0';
-	print_buff(buffer, buff_count);
-	return (buff_count);
+	return (cont);
+}
+/**
+ * check_percent - call function manager
+ * @flag: value by reference
+ * @aux: character
+ * Description: This function print % pear
+ * Return: 1 if % is printed
+ */
+int check_percent(int *flag, char aux)
+{
+	int tmp_flag;
+	int cont = 0;
+
+	tmp_flag = *flag;
+	if (tmp_flag == 2 && aux == '%')
+	{
+		_putchar('%');
+		tmp_flag = 0;
+		cont = 1;
+	}
+	return (cont);
+}
+
+/**
+ * call_funct_mgr - call function manager
+ * @aux: character parameter
+ * @arg: va_list arg
+ * Description: This function call function manager
+ * Return: num of characters printed
+ */
+
+int call_funct_mgr(char aux, va_list arg)
+{
+	int cont = 0;
+
+	cont = function_manager(aux, arg);
+	return (cont);
 }
